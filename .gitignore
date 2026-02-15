@@ -1,0 +1,66 @@
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies
+*.egg-info/
+dist/
+build/
+
+# Logs
+*.log
+
+# Large files and binaries
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Media files
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wav
+*.mp3
+
+# Compiled files
+*.o
+*.so
+*.dll
+*.exe
+
+# IDE workspace files
+*.workspace
+.project
+.classpath
+
+# Node modules (if applicable)
+node_modules/
+
+# Package manager locks (consider committing some)
+# package-lock.json
+# yarn.lock
