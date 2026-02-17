@@ -75,6 +75,11 @@ class OccupancyGridMap:
         # Create and return the OccupancyGridMap instance
         ogm = cls(width=width_m, height=height_m, resolution=resolution_m, obstacle_probability=0.0)
         ogm.grid = grid
+
+        # Ensure grid dimensions match internal state
+        ogm.grid_width = grid_width
+        ogm.grid_height = grid_height
+        
         return ogm
     
     def visualize(self):
