@@ -62,6 +62,10 @@ class OccupancyGridMap:
         # occMapGenerator grids are (x, y); convert to (row=y, col=x)
         grid = occupancy_grid.T.astype(int)
 
+        # Normalize Omron grid to 0=free, 1=occupied
+        # Omron: -1 = occupied, 0 = free
+        grid = (grid < 0).astype(int)
+
         # Calculate map dimensions in meters based on grid size and resolution
         resolution_m = occ_grid_res_mm / 1000.0
         grid_height, grid_width = grid.shape
@@ -90,7 +94,7 @@ class OccupancyGridMap:
 # Example usage
 if __name__ == "__main__":
     # Create a 10x10 meter map with 0.1m resolution and 20% obstacle probability
-    ogm = OccupancyGridMap(width=10, height=10, resolution=1, obstacle_probability=0.2)
-    ogm.generate_random_map()
-    # ogm = OccupancyGridMap.from_omron_map("./src/Base_Maps/input/input.map", occ_grid_res_mm=100, padding_mm=600, enable_padding=True)
+    # ogm = OccupancyGridMap(width=10, height=10, resolution=1, obstacle_probability=0.2)
+    # ogm.generate_random_map()
+    ogm = OccupancyGridMap.from_omron_map("./src/Base_Maps/input/input.map", occ_grid_res_mm=100, padding_mm=600, enable_padding=True)
     ogm.visualize()
