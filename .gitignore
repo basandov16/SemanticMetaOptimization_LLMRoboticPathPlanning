@@ -64,3 +64,6 @@ node_modules/
 # Package manager locks (consider committing some)
 # package-lock.json
 # yarn.lock
+
+# Map files
+*.map
