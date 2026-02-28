@@ -34,6 +34,7 @@ class OccupancyMapOverlay:
         print(f"[_grid_to_image] Converting grid to image. Grid shape: {grid.shape}")
         grid_img = (1 - grid) * 255
         grid_img = grid_img.astype(np.uint8)
+        grid_img = np.flipud(grid_img) # Flip vertically to match image coordinate system
         return Image.fromarray(grid_img).convert("RGB")
 
     def _image_to_base64(self, img: Image.Image) -> str:
@@ -99,18 +100,24 @@ class OccupancyMapOverlay:
         print(f"[_apply_affine] scale={scale}, rotation_deg={rotation_deg}, tx={tx}, ty={ty}")
 
         floor_np = np.array(floor_img)
-        h, w = grid_shape
+        gh, gw = grid_shape
+        fh, fw = floor_np.shape[:2]
 
-        # Compose affine transform: scale + rotation around center, then translate
-        center = (floor_np.shape[1] / 2, floor_np.shape[0] / 2)
-        M = cv2.getRotationMatrix2D(center, rotation_deg, scale)
-        M[0, 2] += tx
-        M[1, 2] += ty
+        # center-to-center mapping + rotation/scale + translation
+        cx_f, cy_f = fw / 2.0, fh / 2.0
+        cx_g, cy_g = gw / 2.0, gh / 2.0
 
+        M_rs = cv2.getRotationMatrix2D((cx_f, cy_f), rotation_deg, scale)
+        M = np.vstack([M_rs, [0, 0, 1]]).astype(np.float32)
+
+        T_center = np.array([[1, 0, (cx_g - cx_f)], [0, 1, (cy_g - cy_f)], [0, 0, 1]], dtype=np.float32)
+        T_user = np.array([[1, 0, tx], [0, 1, ty], [0, 0, 1]], dtype=np.float32)
+
+        M_full = T_user @ T_center @ M
         warped = cv2.warpAffine(
             floor_np,
-            M,
-            (w, h),
+            M_full[:2, :],
+            (gw, gh),
             flags=cv2.INTER_LINEAR,
             borderMode=cv2.BORDER_CONSTANT,
             borderValue=(255, 255, 255),
@@ -164,4 +171,4 @@ if __name__ == "__main__":
 
     # Create overlay generator and produce overlaid image
     overlay = OccupancyMapOverlay(ogm)
-    overlaid = overlay.overlay_with_llm("./src/elb_firstfloor_directorymap.png", "./output/overlaid_map.png")
+    overlaid = overlay.overlay_with_llm("./src/elb_firstfloor_directorymap_cropped.png", "./output/overlaid_map_cropped.png")
