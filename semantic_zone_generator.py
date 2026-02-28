@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from openai import AzureOpenAI
 from occupancy_grid_map_generator import OccupancyGridMap
 
-load_dotenv()
+load_dotenv() # Load environment variables from .env file
 
 class SemanticZoneGenerator:
     def __init__(self, occupancy_grid_map):
