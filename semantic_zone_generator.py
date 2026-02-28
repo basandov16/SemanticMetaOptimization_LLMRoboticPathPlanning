@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from openai import AzureOpenAI
 from occupancy_grid_map_generator import OccupancyGridMap
 
-load_dotenv()
+load_dotenv() # Load environment variables from .env file
 
 class SemanticZoneGenerator:
     def __init__(self, occupancy_grid_map):
@@ -198,8 +198,12 @@ Respond ONLY with the JSON array, no additional text."""
 # Example usage
 if __name__ == "__main__":
     # Create occupancy grid
-    ogm = OccupancyGridMap(width=10, height=10, resolution=1, obstacle_probability=0.2)
-    ogm.generate_random_map()
+    # ogm = OccupancyGridMap(width=10, height=10, resolution=1, obstacle_probability=0.2)
+    # ogm.generate_random_map()
+    # ogm.visualize()
+
+    # Load from Omron .map file
+    ogm = OccupancyGridMap.from_omron_map("./src/Base_Maps/input/input.map", occ_grid_res_mm=100, padding_mm=600, enable_padding=True)
     ogm.visualize()
     
     # Generate semantic zones using LLM
