@@ -47,6 +47,14 @@ build/
 *.wav
 *.mp3
 
+# Images
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.svg
+
 # Compiled files
 *.o
 *.so
